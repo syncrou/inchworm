@@ -21,6 +21,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     saveApiKeyButton.textContent = 'Update Key';
   }
   
+  // Load saved URLs if available
+  const savedUrls = await getUrls();
+  const productionUrlSaved = document.getElementById('productionUrlSaved');
+  const testUrlSaved = document.getElementById('testUrlSaved');
+  
+  if (savedUrls.productionUrl) {
+    productionUrlInput.value = savedUrls.productionUrl;
+    productionUrlSaved.textContent = '(saved)';
+  }
+  if (savedUrls.testUrl) {
+    testUrlInput.value = savedUrls.testUrl;
+    testUrlSaved.textContent = '(saved)';
+  }
+  
+  // Update saved indicators when input changes
+  productionUrlInput.addEventListener('input', () => {
+    if (productionUrlInput.value.trim() !== savedUrls.productionUrl) {
+      productionUrlSaved.textContent = '';
+    } else {
+      productionUrlSaved.textContent = '(saved)';
+    }
+  });
+  
+  testUrlInput.addEventListener('input', () => {
+    if (testUrlInput.value.trim() !== savedUrls.testUrl) {
+      testUrlSaved.textContent = '';
+    } else {
+      testUrlSaved.textContent = '(saved)';
+    }
+  });
+  
   // Handle API key input focus
   apiKeyInput.addEventListener('focus', function() {
     if (this.getAttribute('data-has-key') === 'true') {
@@ -47,6 +78,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   openProductionUrlButton.addEventListener('click', () => {
     const productionUrl = productionUrlInput.value.trim();
     if (productionUrl) {
+      // Save the URL before opening
+      saveUrls(productionUrl, testUrlInput.value.trim());
+      productionUrlSaved.textContent = '(saved)';
+      if (testUrlInput.value.trim()) {
+        testUrlSaved.textContent = '(saved)';
+      }
       chrome.tabs.create({ url: productionUrl });
     } else {
       resultsDiv.innerHTML = '<p style="color: #f44336; font-weight: bold;">Please enter a Production URL</p>';
@@ -57,6 +94,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   openTestUrlButton.addEventListener('click', () => {
     const testUrl = testUrlInput.value.trim();
     if (testUrl) {
+      // Save the URL before opening
+      saveUrls(productionUrlInput.value.trim(), testUrl);
+      testUrlSaved.textContent = '(saved)';
+      if (productionUrlInput.value.trim()) {
+        productionUrlSaved.textContent = '(saved)';
+      }
       chrome.tabs.create({ url: testUrl });
     } else {
       resultsDiv.innerHTML = '<p style="color: #f44336; font-weight: bold;">Please enter a Test URL</p>';
@@ -177,6 +220,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!apiKeyConfigured) {
       resultsDiv.innerHTML = '<p style="color: #f44336; font-weight: bold;">Please configure your OpenAI API key first.</p>';
       return;
+    }
+    
+    // Save current URLs
+    const productionUrl = productionUrlInput.value.trim();
+    const testUrl = testUrlInput.value.trim();
+    if (productionUrl || testUrl) {
+      saveUrls(productionUrl, testUrl);
     }
     
     // Get the most recent control and test images

@@ -162,6 +162,12 @@
       border-radius: var(--border-radius);
       overflow-x: auto;
     }
+    
+    .saved-indicator {
+      font-size: 12px;
+      color: var(--primary-color);
+      margin-left: 5px;
+    }
   </style>
  </head>
  <body>
@@ -174,13 +180,13 @@
   </div>
   
   <div class="form-group">
-    <label for="productionUrl">Production URL:</label>
+    <label for="productionUrl">Production URL: <span id="productionUrlSaved" class="saved-indicator"></span></label>
     <input type="url" id="productionUrl" placeholder="https://production-site.com">
     <button id="openProductionUrl">Open Production URL</button>
   </div>
   
   <div class="form-group">
-    <label for="testUrl">Test URL:</label>
+    <label for="testUrl">Test URL: <span id="testUrlSaved" class="saved-indicator"></span></label>
     <input type="url" id="testUrl" placeholder="https://test-site.com">
     <button id="openTestUrl">Open Test URL</button>
   </div>
