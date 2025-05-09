@@ -54,20 +54,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       // Helper function to get base model name
       function getBaseModelName(model) {
-        if (model.includes('gpt-4-vision')) return 'gpt-4-vision';
         if (model.includes('gpt-4o')) return 'gpt-4o';
         if (model.includes('gpt-4-turbo')) return 'gpt-4-turbo';
-        if (model.includes('gpt-4') && !model.includes('turbo') && !model.includes('vision')) return 'gpt-4';
+        if (model.includes('gpt-4') && !model.includes('turbo')) return 'gpt-4';
         if (model.includes('gpt-3.5-turbo')) return 'gpt-3.5-turbo';
         return model;
       }
       
       // Helper function to get friendly display name
       function getDisplayName(model) {
-        if (model.includes('gpt-4-vision')) return 'GPT-4 Vision';
         if (model.includes('gpt-4o')) return 'GPT-4o';
         if (model.includes('gpt-4-turbo')) return 'GPT-4 Turbo';
-        if (model.includes('gpt-4') && !model.includes('turbo') && !model.includes('vision')) return 'GPT-4';
+        if (model.includes('gpt-4') && !model.includes('turbo')) return 'GPT-4';
         if (model.includes('gpt-3.5-turbo')) return 'GPT-3.5 Turbo';
         return model; // Fallback to the original model name
       }
@@ -167,20 +165,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Helper function to get base model name
         function getBaseModelName(model) {
-          if (model.includes('gpt-4-vision')) return 'gpt-4-vision';
           if (model.includes('gpt-4o')) return 'gpt-4o';
           if (model.includes('gpt-4-turbo')) return 'gpt-4-turbo';
-          if (model.includes('gpt-4') && !model.includes('turbo') && !model.includes('vision')) return 'gpt-4';
+          if (model.includes('gpt-4') && !model.includes('turbo')) return 'gpt-4';
           if (model.includes('gpt-3.5-turbo')) return 'gpt-3.5-turbo';
           return model;
         }
         
         // Helper function to get friendly display name
         function getDisplayName(model) {
-          if (model.includes('gpt-4-vision')) return 'GPT-4 Vision';
           if (model.includes('gpt-4o')) return 'GPT-4o';
           if (model.includes('gpt-4-turbo')) return 'GPT-4 Turbo';
-          if (model.includes('gpt-4') && !model.includes('turbo') && !model.includes('vision')) return 'GPT-4';
+          if (model.includes('gpt-4') && !model.includes('turbo')) return 'GPT-4';
           if (model.includes('gpt-3.5-turbo')) return 'GPT-3.5 Turbo';
           return model; // Fallback to the original model name
         }

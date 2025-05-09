@@ -101,7 +101,7 @@ function saveSelectedModel(model) {
 // Get selected model from Chrome storage
 async function getSelectedModel() {
   const result = await chrome.storage.local.get(['selectedModel']);
-  return result.selectedModel || 'gpt-4-vision-preview'; // Default model
+  return result.selectedModel || 'gpt-4o'; // Default model
 }
 
 // Get available models from OpenAI API
@@ -122,7 +122,6 @@ async function getAvailableModels(apiKey) {
     
     // Filter for vision-capable models and other commonly used models
     const supportedModels = [
-      'gpt-4-vision-preview',
       'gpt-4o',
       'gpt-4-turbo',
       'gpt-4',
@@ -144,7 +143,6 @@ async function getAvailableModels(apiKey) {
     console.error("Error fetching models:", error);
     // Return default models if API call fails
     return [
-      'gpt-4-vision-preview',
       'gpt-4o',
       'gpt-4-turbo',
       'gpt-4',
