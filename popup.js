@@ -15,10 +15,62 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // Load saved API key if available
   const savedApiKey = await getApiKey();
+  const modelSelectorContainer = document.getElementById('modelSelectorContainer');
+  const modelSelector = document.getElementById('modelSelector');
+  const modelSaved = document.getElementById('modelSaved');
+  
   if (savedApiKey) {
     apiKeyInput.value = '••••••••••••••••••••••••••';
     apiKeyInput.setAttribute('data-has-key', 'true');
     saveApiKeyButton.textContent = 'Update Key';
+    
+    // Show model selector and populate with available models
+    modelSelectorContainer.style.display = 'block';
+    
+    try {
+      // Get available models
+      const models = await getAvailableModels(savedApiKey);
+      
+      // Get saved model
+      const savedModel = await getSelectedModel();
+      
+      // Clear existing options
+      modelSelector.innerHTML = '';
+      
+      // Add options for each model
+      models.forEach(model => {
+        const option = document.createElement('option');
+        option.value = model;
+        
+        // Format the model name for display
+        let displayName = model;
+        if (model.includes('gpt-4-vision-preview')) {
+          displayName = 'GPT-4 Vision Preview';
+        } else if (model.includes('gpt-4o')) {
+          displayName = 'GPT-4o';
+        } else if (model.includes('gpt-4-turbo')) {
+          displayName = 'GPT-4 Turbo';
+        } else if (model.includes('gpt-4')) {
+          displayName = 'GPT-4';
+        } else if (model.includes('gpt-3.5-turbo')) {
+          displayName = 'GPT-3.5 Turbo';
+        }
+        
+        option.textContent = displayName;
+        modelSelector.appendChild(option);
+      });
+      
+      // Set the selected model
+      if (savedModel && models.includes(savedModel)) {
+        modelSelector.value = savedModel;
+        modelSaved.textContent = '(saved)';
+      }
+    } catch (error) {
+      console.error('Error loading models:', error);
+    }
+  } else {
+    // Hide model selector if no API key
+    modelSelectorContainer.style.display = 'none';
   }
   
   // Load saved URLs if available
@@ -59,16 +111,68 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
   
+  // Handle model selection
+  modelSelector.addEventListener('change', async function() {
+    const selectedModel = this.value;
+    await saveSelectedModel(selectedModel);
+    modelSaved.textContent = '(saved)';
+  });
+  
   // Save API key when button is clicked
-  saveApiKeyButton.addEventListener('click', () => {
+  saveApiKeyButton.addEventListener('click', async () => {
     const apiKey = apiKeyInput.value.trim();
     if (apiKey) {
-      saveApiKey(apiKey).then(() => {
-        apiKeyInput.value = '••••••••••••••••••••••••••';
-        apiKeyInput.setAttribute('data-has-key', 'true');
-        saveApiKeyButton.textContent = 'Update Key';
-        resultsDiv.innerHTML = '<p style="color: green;">API key saved successfully!</p>';
-      });
+      await saveApiKey(apiKey);
+      apiKeyInput.value = '••••••••••••••••••••••••••';
+      apiKeyInput.setAttribute('data-has-key', 'true');
+      saveApiKeyButton.textContent = 'Update Key';
+      resultsDiv.innerHTML = '<p style="color: green;">API key saved successfully!</p>';
+      
+      // Show and populate model selector
+      modelSelectorContainer.style.display = 'block';
+      
+      try {
+        // Get available models
+        const models = await getAvailableModels(apiKey);
+        
+        // Clear existing options
+        modelSelector.innerHTML = '';
+        
+        // Add options for each model
+        models.forEach(model => {
+          const option = document.createElement('option');
+          option.value = model;
+          
+          // Format the model name for display
+          let displayName = model;
+          if (model.includes('gpt-4-vision-preview')) {
+            displayName = 'GPT-4 Vision Preview';
+          } else if (model.includes('gpt-4o')) {
+            displayName = 'GPT-4o';
+          } else if (model.includes('gpt-4-turbo')) {
+            displayName = 'GPT-4 Turbo';
+          } else if (model.includes('gpt-4')) {
+            displayName = 'GPT-4';
+          } else if (model.includes('gpt-3.5-turbo')) {
+            displayName = 'GPT-3.5 Turbo';
+          }
+          
+          option.textContent = displayName;
+          modelSelector.appendChild(option);
+        });
+        
+        // Save the first model as default if none is saved
+        const savedModel = await getSelectedModel();
+        if (models.length > 0) {
+          if (!savedModel || !models.includes(savedModel)) {
+            await saveSelectedModel(models[0]);
+          }
+          modelSelector.value = savedModel || models[0];
+          modelSaved.textContent = '(saved)';
+        }
+      } catch (error) {
+        console.error('Error loading models:', error);
+      }
     } else {
       resultsDiv.innerHTML = '<p style="color: red;">Please enter a valid API key</p>';
     }

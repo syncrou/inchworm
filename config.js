@@ -92,3 +92,63 @@ async function getUrls() {
     testUrl: result.testUrl || ''
   };
 }
+
+// Save selected model to Chrome storage
+function saveSelectedModel(model) {
+  return chrome.storage.local.set({ selectedModel: model });
+}
+
+// Get selected model from Chrome storage
+async function getSelectedModel() {
+  const result = await chrome.storage.local.get(['selectedModel']);
+  return result.selectedModel || 'gpt-4-vision-preview'; // Default model
+}
+
+// Get available models from OpenAI API
+async function getAvailableModels(apiKey) {
+  try {
+    const response = await fetch('https://api.openai.com/v1/models', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    
+    // Filter for vision-capable models and other commonly used models
+    const supportedModels = [
+      'gpt-4-vision-preview',
+      'gpt-4o',
+      'gpt-4-turbo',
+      'gpt-4',
+      'gpt-3.5-turbo'
+    ];
+    
+    // Filter models that are in our supported list and available in the API
+    const availableModels = data.data
+      .filter(model => supportedModels.some(supported => model.id.includes(supported)))
+      .map(model => model.id);
+    
+    // Add fallback models if none are found
+    if (availableModels.length === 0) {
+      return supportedModels;
+    }
+    
+    return availableModels;
+  } catch (error) {
+    console.error("Error fetching models:", error);
+    // Return default models if API call fails
+    return [
+      'gpt-4-vision-preview',
+      'gpt-4o',
+      'gpt-4-turbo',
+      'gpt-4',
+      'gpt-3.5-turbo'
+    ];
+  }
+}

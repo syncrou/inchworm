@@ -26,6 +26,10 @@
     const controlBase64 = dataURLToBase64(controlData);
     const testBase64 = dataURLToBase64(testData);
     
+    // Get the selected model
+    const result = await chrome.storage.local.get(['selectedModel']);
+    const selectedModel = result.selectedModel || 'gpt-4-vision-preview';
+    
     // Prepare the API request to OpenAI
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -34,7 +38,7 @@
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "gpt-4-vision-preview",
+        model: selectedModel,
         messages: [
           {
             role: "system",
@@ -159,6 +163,10 @@
     const controlBase64 = controlData.startsWith('data:image') ? dataURLToBase64(controlData) : controlData;
     const testBase64 = testData.startsWith('data:image') ? dataURLToBase64(testData) : testData;
     
+    // Get the selected model
+    const result = await chrome.storage.local.get(['selectedModel']);
+    const selectedModel = result.selectedModel || 'gpt-4-vision-preview';
+    
     // Prepare the API request to OpenAI
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -167,7 +175,7 @@
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "gpt-4.1-mini",
+        model: selectedModel,
         messages: [
           {
             role: "system",

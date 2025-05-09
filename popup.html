@@ -172,6 +172,21 @@
       color: var(--primary-color);
       margin-left: 5px;
     }
+    
+    .model-selector {
+      width: 100%;
+      padding: 8px 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: var(--border-radius);
+      font-family: 'Poppins', sans-serif;
+      background-color: white;
+      margin-top: 5px;
+    }
+    
+    .model-selector:focus {
+      border-color: var(--secondary-color);
+      outline: none;
+    }
   </style>
  </head>
  <body>
@@ -208,6 +223,13 @@
     <label for="apiKey">OpenAI API Key:</label>
     <input type="password" id="apiKey" placeholder="Enter your OpenAI API key">
     <button id="saveApiKey">Save Key</button>
+    <div id="modelSelectorContainer" style="margin-top: 10px; display: none;">
+      <label for="modelSelector">Select Model:</label>
+      <select id="modelSelector" class="model-selector">
+        <option value="gpt-4-vision-preview">GPT-4 Vision Preview</option>
+      </select>
+      <span id="modelSaved" class="saved-indicator"></span>
+    </div>
   </div>
   
   <div class="form-group">
