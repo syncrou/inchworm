@@ -34,7 +34,7 @@
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "gpt-4-vision",
+        model: "gpt-4-vision-preview",
         messages: [
           {
             role: "system",
@@ -167,7 +167,7 @@
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "gpt-4-vision",
+        model: "gpt-4-vision-preview",
         messages: [
           {
             role: "system",
