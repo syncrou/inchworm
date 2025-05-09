@@ -54,15 +54,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       // Helper function to get base model name
       function getBaseModelName(model) {
-        if (model.includes('gpt-4-vision-preview')) return 'gpt-4-vision-preview';
-        if (model.includes('gpt-4-turbo')) return 'gpt-4-turbo';
+        if (model.includes('gpt-4o-mini')) return 'gpt-4o-mini';
         return model;
       }
       
       // Helper function to get friendly display name
       function getDisplayName(model) {
-        if (model.includes('gpt-4-vision-preview')) return 'GPT-4 Vision Preview';
-        if (model.includes('gpt-4-turbo')) return 'GPT-4 Turbo';
+        if (model.includes('gpt-4o-mini')) return 'GPT-4o Mini';
         return model; // Fallback to the original model name
       }
       
@@ -161,15 +159,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Helper function to get base model name
         function getBaseModelName(model) {
-          if (model.includes('gpt-4-vision-preview')) return 'gpt-4-vision-preview';
-          if (model.includes('gpt-4-turbo')) return 'gpt-4-turbo';
+          if (model.includes('gpt-4o-mini')) return 'gpt-4o-mini';
           return model;
         }
         
         // Helper function to get friendly display name
         function getDisplayName(model) {
-          if (model.includes('gpt-4-vision-preview')) return 'GPT-4 Vision Preview';
-          if (model.includes('gpt-4-turbo')) return 'GPT-4 Turbo';
+          if (model.includes('gpt-4o-mini')) return 'GPT-4o-mini';
           return model; // Fallback to the original model name
         }
         
