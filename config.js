@@ -101,7 +101,7 @@ function saveSelectedModel(model) {
 // Get selected model from Chrome storage
 async function getSelectedModel() {
   const result = await chrome.storage.local.get(['selectedModel']);
-  return result.selectedModel || 'gpt-4o'; // Default model
+  return result.selectedModel || 'gpt-4-turbo'; // Default model
 }
 
 // Get available models from OpenAI API
@@ -120,33 +120,31 @@ async function getAvailableModels(apiKey) {
     
     const data = await response.json();
     
-    // Filter for vision-capable models and other commonly used models
-    const supportedModels = [
-      'gpt-4o',
-      'gpt-4-turbo',
-      'gpt-4',
-      'gpt-3.5-turbo'
+    // Only these models support vision capabilities
+    const visionCapableModels = [
+      'gpt-4-vision-preview',
+      'gpt-4-turbo-2024-04-09',
+      'gpt-4-turbo'
     ];
     
-    // Filter models that are in our supported list and available in the API
+    // Filter models that are vision-capable and available in the API
     const availableModels = data.data
-      .filter(model => supportedModels.some(supported => model.id.includes(supported)))
+      .filter(model => visionCapableModels.some(supported => model.id.includes(supported)))
       .map(model => model.id);
     
     // Add fallback models if none are found
     if (availableModels.length === 0) {
-      return supportedModels;
+      return visionCapableModels;
     }
     
     return availableModels;
   } catch (error) {
     console.error("Error fetching models:", error);
-    // Return default models if API call fails
+    // Return default vision-capable models if API call fails
     return [
-      'gpt-4o',
-      'gpt-4-turbo',
-      'gpt-4',
-      'gpt-3.5-turbo'
+      'gpt-4-vision-preview',
+      'gpt-4-turbo-2024-04-09',
+      'gpt-4-turbo'
     ];
   }
 }
