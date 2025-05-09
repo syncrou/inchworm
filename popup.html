@@ -5,11 +5,13 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      width: 400px;
+      width: 500px;
       padding: 15px;
     }
     .form-group {
       margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
     }
     label {
       display: block;
@@ -20,6 +22,7 @@
       width: 100%;
       padding: 8px;
       box-sizing: border-box;
+      margin-bottom: 5px;
     }
     button {
       background-color: #4285f4;
@@ -28,6 +31,8 @@
       padding: 10px 15px;
       cursor: pointer;
       border-radius: 4px;
+      margin-right: 5px;
+      margin-bottom: 5px;
     }
     button:hover {
       background-color: #3367d6;
@@ -38,6 +43,29 @@
       border: 1px solid #ddd;
       border-radius: 4px;
       min-height: 100px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+    }
+    .delete-image {
+      background-color: #f44336;
+    }
+    .delete-image:hover {
+      background-color: #d32f2f;
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
     }
   </style>
  </head>
@@ -53,14 +81,22 @@
   <div class="form-group">
     <label for="productionUrl">Production URL:</label>
     <input type="url" id="productionUrl" placeholder="https://production-site.com">
+    <button id="openProductionUrl">Open Production URL</button>
   </div>
   
   <div class="form-group">
     <label for="testUrl">Test URL:</label>
     <input type="url" id="testUrl" placeholder="https://test-site.com">
+    <button id="openTestUrl">Open Test URL</button>
+  </div>
+  
+  <div class="form-group">
+    <button id="captureControl">Capture Control Image</button>
+    <button id="captureTest">Capture Test Image</button>
   </div>
   
   <button id="runTest">Run Test</button>
+  <button id="viewSavedImages">View Saved Images</button>
   <div id="results"></div>
  
   <script src="config.js"></script>
