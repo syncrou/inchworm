@@ -1,10 +1,30 @@
 // popup.js - Handles the popup UI and interactions
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const apiKeyInput = document.getElementById('apiKey');
+  const saveApiKeyButton = document.getElementById('saveApiKey');
   const runTestButton = document.getElementById('runTest');
   const resultsDiv = document.getElementById('results');
   const productionUrlInput = document.getElementById('productionUrl');
   const testUrlInput = document.getElementById('testUrl');
+  
+  // Load saved API key if available
+  const savedApiKey = await getApiKey();
+  if (savedApiKey) {
+    apiKeyInput.value = savedApiKey;
+  }
+  
+  // Save API key when button is clicked
+  saveApiKeyButton.addEventListener('click', () => {
+    const apiKey = apiKeyInput.value.trim();
+    if (apiKey) {
+      saveApiKey(apiKey).then(() => {
+        resultsDiv.innerHTML = '<p style="color: green;">API key saved successfully!</p>';
+      });
+    } else {
+      resultsDiv.innerHTML = '<p style="color: red;">Please enter a valid API key</p>';
+    }
+  });
   
   runTestButton.addEventListener('click', async () => {
     // Check if API key is configured

@@ -16,27 +16,3 @@ async function isApiKeyConfigured() {
   const apiKey = await getApiKey();
   return !!apiKey;
 }
-
-// Initialize event listeners for configuration UI
-document.addEventListener('DOMContentLoaded', async () => {
-  const apiKeyInput = document.getElementById('apiKey');
-  const saveApiKeyButton = document.getElementById('saveApiKey');
-  
-  // Load saved API key if available
-  const savedApiKey = await getApiKey();
-  if (savedApiKey) {
-    apiKeyInput.value = savedApiKey;
-  }
-  
-  // Save API key when button is clicked
-  saveApiKeyButton.addEventListener('click', () => {
-    const apiKey = apiKeyInput.value.trim();
-    if (apiKey) {
-      saveApiKey(apiKey).then(() => {
-        alert('API key saved successfully!');
-      });
-    } else {
-      alert('Please enter a valid API key');
-    }
-  });
-});
