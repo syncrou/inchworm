@@ -27,8 +27,8 @@
     const testBase64 = dataURLToBase64(testData);
     
     // Get the selected model
-    const result = await chrome.storage.local.get(['selectedModel']);
-    const selectedModel = result.selectedModel || 'gpt-4-vision-preview';
+    const modelResult = await chrome.storage.local.get(['selectedModel']);
+    const selectedModel = modelResult.selectedModel || 'gpt-4-vision-preview';
     
     // Prepare the API request to OpenAI
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -164,8 +164,8 @@
     const testBase64 = testData.startsWith('data:image') ? dataURLToBase64(testData) : testData;
     
     // Get the selected model
-    const result = await chrome.storage.local.get(['selectedModel']);
-    const selectedModel = result.selectedModel || 'gpt-4-vision-preview';
+    const modelResult = await chrome.storage.local.get(['selectedModel']);
+    const selectedModel = modelResult.selectedModel || 'gpt-4-vision-preview';
     
     // Prepare the API request to OpenAI
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
