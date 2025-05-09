@@ -352,6 +352,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Show loading state
     resultsDiv.innerHTML = '<p>Running test, please wait...</p>';
     
+    // Get the selected model
+    const modelResult = await chrome.storage.local.get(['selectedModel']);
+    const selectedModel = modelResult.selectedModel || 'gpt-4-vision-preview';
+    
     // Send message to background script to run the test with saved images
     chrome.runtime.sendMessage({
       action: "runTestWithImages",
@@ -359,7 +363,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         controlImage: recentImages.control.imageData,
         testImage: recentImages.test.imageData,
         controlUrl: recentImages.control.url,
-        testUrl: recentImages.test.url
+        testUrl: recentImages.test.url,
+        selectedModel: selectedModel
       }
     });
   });
@@ -388,14 +393,109 @@ document.addEventListener('DOMContentLoaded', async () => {
           .replace(/VERDICT: PASS/gi, '<span style="color: #4caf50; font-weight: bold;">VERDICT: PASS</span>')
           .replace(/VERDICT: FAIL/gi, '<span style="color: #f44336; font-weight: bold;">VERDICT: FAIL</span>');
         
+        // Get timestamp for the filename
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        
+        // Create download button
+        const downloadButton = `
+          <button id="downloadResults" style="background-color: #8bc34a; margin-top: 15px; width: 100%;">
+            Download Results as HTML
+          </button>
+        `;
+        
+        // Get model name for display
+        const modelName = message.testConfig?.selectedModel || 'Unknown Model';
+        
         resultsDiv.innerHTML = `
           <h3>Test Results</h3>
           ${statusBanner}
           <div style="background-color: white; padding: 15px; border-radius: 8px; margin-top: 10px;">
+            <p><strong>Model used:</strong> ${modelName}</p>
             <h4>Detailed Analysis:</h4>
             <div style="white-space: pre-wrap; font-family: 'Poppins', sans-serif;">${formattedAnalysis}</div>
           </div>
+          ${downloadButton}
         `;
+        
+        // Add event listener to download button
+        document.getElementById('downloadResults').addEventListener('click', () => {
+          // Create full HTML report
+          const htmlContent = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Inchworm QA Test Results - ${timestamp}</title>
+            <style>
+              body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+              h1, h2, h3 { color: #4caf50; }
+              .banner { padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center; color: white; }
+              .pass { background-color: #4caf50; }
+              .fail { background-color: #f44336; }
+              .images { display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0; }
+              .image-container { flex: 1; min-width: 300px; }
+              .image-container img { max-width: 100%; border: 1px solid #ddd; }
+              .analysis { white-space: pre-wrap; background-color: #f9f9f9; padding: 15px; border-radius: 8px; }
+              .critical { color: #f44336; font-weight: bold; }
+              .major { color: #ff9800; font-weight: bold; }
+              .minor { color: #ffeb3b; font-weight: bold; }
+              .cosmetic { color: #8bc34a; font-weight: bold; }
+              .verdict-pass { color: #4caf50; font-weight: bold; }
+              .verdict-fail { color: #f44336; font-weight: bold; }
+              .metadata { background-color: #f5f5f5; padding: 10px; border-radius: 8px; margin-bottom: 20px; }
+            </style>
+          </head>
+          <body>
+            <h1>Inchworm QA Test Results</h1>
+            
+            <div class="metadata">
+              <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+              <p><strong>Model used:</strong> ${modelName}</p>
+              <p><strong>Control URL:</strong> ${message.testConfig?.controlUrl || 'N/A'}</p>
+              <p><strong>Test URL:</strong> ${message.testConfig?.testUrl || 'N/A'}</p>
+            </div>
+            
+            <div class="banner ${message.data.passed ? 'pass' : 'fail'}">
+              <h2>${message.data.passed ? '✅ PASSED' : '❌ FAILED'}</h2>
+              <p>${message.data.passed ? 'All tests completed successfully' : 'Issues were detected that require attention'}</p>
+            </div>
+            
+            <h2>Screenshots Compared</h2>
+            <div class="images">
+              <div class="image-container">
+                <h3>Control Image (Production)</h3>
+                <img src="${message.testConfig?.controlImage}" alt="Control Image">
+              </div>
+              <div class="image-container">
+                <h3>Test Image</h3>
+                <img src="${message.testConfig?.testImage}" alt="Test Image">
+              </div>
+            </div>
+            
+            <h2>Analysis</h2>
+            <div class="analysis">
+              ${message.data.analysis
+                .replace(/CRITICAL:/g, '<span class="critical">CRITICAL:</span>')
+                .replace(/MAJOR:/g, '<span class="major">MAJOR:</span>')
+                .replace(/MINOR:/g, '<span class="minor">MINOR:</span>')
+                .replace(/COSMETIC:/g, '<span class="cosmetic">COSMETIC:</span>')
+                .replace(/VERDICT: PASS/gi, '<span class="verdict-pass">VERDICT: PASS</span>')
+                .replace(/VERDICT: FAIL/gi, '<span class="verdict-fail">VERDICT: FAIL</span>')}
+            </div>
+          </body>
+          </html>
+          `;
+          
+          // Create download link
+          const blob = new Blob([htmlContent], { type: 'text/html' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `inchworm-qa-results-${timestamp}.html`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        });
       } else {
         resultsDiv.innerHTML = `
           <div style="background-color: #f44336; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 20px; font-weight: bold;">
