@@ -6,72 +6,149 @@
   return chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
  }
  
- // Function to compare screenshots (using pixelmatch - you'll need to include it)
- async function compareScreenshots(controlData, testData) {
-  // Assuming you have pixelmatch included somehow (e.g., via a content script or a build process)
-  // This part needs adaptation depending on how you integrate pixelmatch
-  // Example (requires pixelmatch to be accessible in this scope):
-  const img1 = await createImageBitmap(controlData); // Assuming controlData is a Blob or similar
-  const img2 = await createImageBitmap(testData); // Assuming testData is a Blob or similar
- 
-  const width = img1.width;
-  const height = img1.height;
-  const diff = new ImageData(width, height);
- 
-  const result = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
- 
-  return {
-    diffPixels: result,
-    diffImage: diff, // You might need to convert this to a data URL or similar for display
-  };
+ // Function to convert data URL to base64 string (removing the prefix)
+ function dataURLToBase64(dataURL) {
+  return dataURL.split(',')[1];
  }
  
- // Example function to run a test
- async function runTest(testConfig) {
-  // 1. Navigate to production site
-  // 2. Capture control screenshot and store it (e.g., in chrome.storage)
-  // 3. Navigate to testing site
-  // 4. Capture test screenshot
-  // 5. Compare screenshots
-  // 6. Report results (e.g., send a message to the popup)
- 
-  // This is a simplified example, you'll need to expand it
+ // Function to compare screenshots using OpenAI Vision API
+ async function compareScreenshotsWithLLM(controlData, testData) {
   try {
-    // Example: Assuming testConfig has URLs for production and test sites
+    // Get API key from storage
+    const result = await chrome.storage.sync.get(['apiKey']);
+    const apiKey = result.apiKey;
+    
+    if (!apiKey) {
+      throw new Error("API key not configured");
+    }
+    
+    // Convert data URLs to base64
+    const controlBase64 = dataURLToBase64(controlData);
+    const testBase64 = dataURLToBase64(testData);
+    
+    // Prepare the API request to OpenAI
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4-vision-preview",
+        messages: [
+          {
+            role: "system",
+            content: "You are a QA testing assistant that compares screenshots of websites to identify visual differences and determine if they pass quality assurance standards."
+          },
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: "I'm comparing a production website with a test version. The first image is from production, and the second is from the test environment. Please analyze both images and tell me:\n1. Are there any visual differences between them?\n2. If there are differences, are they significant enough to fail QA testing?\n3. Provide a detailed explanation of what differences you found.\n4. Conclude with a clear PASS or FAIL recommendation."
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:image/png;base64,${controlBase64}`
+                }
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:image/png;base64,${testBase64}`
+                }
+              }
+            ]
+          }
+        ],
+        max_tokens: 1000
+      })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`API error: ${errorData.error?.message || response.statusText}`);
+    }
+    
+    const data = await response.json();
+    const analysis = data.choices[0].message.content;
+    
+    // Determine if the test passed based on the analysis
+    const passed = analysis.toLowerCase().includes("pass");
+    
+    return {
+      passed,
+      analysis
+    };
+  } catch (error) {
+    console.error("LLM comparison failed:", error);
+    throw error;
+  }
+ }
+ 
+ // Function to run a test
+ async function runTest(testConfig) {
+  try {
     const productionUrl = testConfig.productionUrl;
     const testUrl = testConfig.testUrl;
- 
-    // Navigate to production (you'll need to handle tab management)
-    // ...
- 
+    
+    if (!productionUrl || !testUrl) {
+      throw new Error("Production and test URLs are required");
+    }
+    
+    // Create a new tab for production site
+    const productionTab = await chrome.tabs.create({ url: productionUrl, active: true });
+    
+    // Wait for page to load completely
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    
     // Capture control screenshot
     const controlScreenshot = await captureScreenshot();
-    // Store controlScreenshot (e.g., in chrome.storage)
-    // ...
- 
-    // Navigate to test site
-    // ...
- 
+    
+    // Navigate to test site in the same tab
+    await chrome.tabs.update(productionTab.id, { url: testUrl });
+    
+    // Wait for page to load completely
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    
     // Capture test screenshot
     const testScreenshot = await captureScreenshot();
- 
-    // Compare screenshots
-    const comparisonResult = await compareScreenshots(controlScreenshot, testScreenshot);
- 
-    // Report results (e.g., send a message to the popup)
-    // ...
- 
+    
+    // Close the tab we created
+    await chrome.tabs.remove(productionTab.id);
+    
+    // Compare screenshots using LLM
+    const comparisonResult = await compareScreenshotsWithLLM(controlScreenshot, testScreenshot);
+    
+    // Report results to the popup
+    chrome.runtime.sendMessage({
+      type: 'testResult',
+      success: true,
+      data: comparisonResult
+    });
+    
     console.log("Test Result:", comparisonResult);
+    return comparisonResult;
   } catch (error) {
     console.error("Test failed:", error);
-    // Handle errors appropriately
+    
+    // Report error to the popup
+    chrome.runtime.sendMessage({
+      type: 'testResult',
+      success: false,
+      error: error.message
+    });
+    
+    throw error;
   }
  }
  
  // Listen for messages from the popup or other parts of the extension
  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "runTest") {
-    runTest(request.testConfig);
+    runTest(request.testConfig)
+      .catch(error => console.error("Test execution failed:", error));
+    return true; // Indicates async response
   }
-  // Add more message handling as needed
  });

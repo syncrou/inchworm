@@ -2,11 +2,14 @@
   "manifest_version": 3,
   "name": "QA Screenshot Tester",
   "version": "1.0",
-  "description": "Automates QA tests by comparing screenshots.",
+  "description": "Automates QA tests by comparing screenshots using LLM.",
   "permissions": [
     "activeTab",
     "scripting",
     "storage"
+  ],
+  "host_permissions": [
+    "https://api.openai.com/*"
   ],
   "action": {
     "default_popup": "popup.html"
