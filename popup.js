@@ -16,14 +16,26 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Load saved API key if available
   const savedApiKey = await getApiKey();
   if (savedApiKey) {
-    apiKeyInput.value = savedApiKey;
+    apiKeyInput.value = '••••••••••••••••••••••••••';
+    apiKeyInput.setAttribute('data-has-key', 'true');
+    saveApiKeyButton.textContent = 'Update Key';
   }
+  
+  // Handle API key input focus
+  apiKeyInput.addEventListener('focus', function() {
+    if (this.getAttribute('data-has-key') === 'true') {
+      this.value = '';
+    }
+  });
   
   // Save API key when button is clicked
   saveApiKeyButton.addEventListener('click', () => {
     const apiKey = apiKeyInput.value.trim();
     if (apiKey) {
       saveApiKey(apiKey).then(() => {
+        apiKeyInput.value = '••••••••••••••••••••••••••';
+        apiKeyInput.setAttribute('data-has-key', 'true');
+        saveApiKeyButton.textContent = 'Update Key';
         resultsDiv.innerHTML = '<p style="color: green;">API key saved successfully!</p>';
       });
     } else {
