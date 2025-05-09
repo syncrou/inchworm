@@ -29,10 +29,14 @@
       margin-bottom: 25px;
       font-size: 28px;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
-    h1::before {
-      content: "🐛";
+    .title-icon {
+      width: 40px;
+      height: 40px;
       margin-right: 10px;
     }
     
@@ -171,7 +175,34 @@
   </style>
  </head>
  <body>
-  <h1>Inchworm</h1>
+  <h1>
+    <svg class="title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="40" height="40">
+      <!-- Inchworm body segments -->
+      <path d="M20,64 C20,54 30,48 40,48 C50,48 60,54 60,64 C60,74 70,80 80,80 C90,80 100,74 100,64" 
+            stroke="#4caf50" stroke-width="16" fill="none" stroke-linecap="round"/>
+      
+      <!-- Inchworm head -->
+      <circle cx="100" cy="64" r="16" fill="#8bc34a"/>
+      
+      <!-- Inchworm eyes -->
+      <circle cx="96" cy="58" r="4" fill="#333"/>
+      <circle cx="104" cy="58" r="4" fill="#333"/>
+      
+      <!-- Inchworm mouth -->
+      <path d="M96,70 Q100,74 104,70" stroke="#333" stroke-width="2" fill="none"/>
+      
+      <!-- Inchworm antennae -->
+      <line x1="94" y1="50" x2="88" y2="40" stroke="#333" stroke-width="3"/>
+      <line x1="106" y1="50" x2="112" y2="40" stroke="#333" stroke-width="3"/>
+      
+      <!-- Highlight spots -->
+      <circle cx="30" cy="64" r="4" fill="#8bc34a"/>
+      <circle cx="50" cy="64" r="4" fill="#8bc34a"/>
+      <circle cx="70" cy="64" r="4" fill="#8bc34a"/>
+      <circle cx="90" cy="64" r="4" fill="#8bc34a"/>
+    </svg>
+    Inchworm
+  </h1>
   
   <div class="form-group">
     <label for="apiKey">OpenAI API Key:</label>
