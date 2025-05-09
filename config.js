@@ -75,3 +75,20 @@ async function deleteImage(imageId) {
   
   return chrome.storage.local.set({ savedImages: updatedImages });
 }
+
+// Save URLs to Chrome storage
+function saveUrls(productionUrl, testUrl) {
+  return chrome.storage.local.set({ 
+    productionUrl: productionUrl,
+    testUrl: testUrl 
+  });
+}
+
+// Get URLs from Chrome storage
+async function getUrls() {
+  const result = await chrome.storage.local.get(['productionUrl', 'testUrl']);
+  return {
+    productionUrl: result.productionUrl || '',
+    testUrl: result.testUrl || ''
+  };
+}
