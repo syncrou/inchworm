@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (productionUrl) {
       chrome.tabs.create({ url: productionUrl });
     } else {
-      resultsDiv.innerHTML = '<p style="color: red;">Please enter a Production URL</p>';
+      resultsDiv.innerHTML = '<p style="color: #f44336; font-weight: bold;">Please enter a Production URL</p>';
     }
   });
   
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (testUrl) {
       chrome.tabs.create({ url: testUrl });
     } else {
-      resultsDiv.innerHTML = '<p style="color: red;">Please enter a Test URL</p>';
+      resultsDiv.innerHTML = '<p style="color: #f44336; font-weight: bold;">Please enter a Test URL</p>';
     }
   });
   
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       resultsDiv.innerHTML = '<p style="color: green;">Control image captured and saved!</p>';
     } catch (error) {
-      resultsDiv.innerHTML = `<p style="color: red;">Error capturing image: ${error.message}</p>`;
+      resultsDiv.innerHTML = `<p style="color: #f44336; font-weight: bold;">Error capturing image: ${error.message}</p>`;
     }
   });
   
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       resultsDiv.innerHTML = '<p style="color: green;">Test image captured and saved!</p>';
     } catch (error) {
-      resultsDiv.innerHTML = `<p style="color: red;">Error capturing image: ${error.message}</p>`;
+      resultsDiv.innerHTML = `<p style="color: #f44336; font-weight: bold;">Error capturing image: ${error.message}</p>`;
     }
   });
   
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
       });
     } catch (error) {
-      resultsDiv.innerHTML = `<p style="color: red;">Error loading images: ${error.message}</p>`;
+      resultsDiv.innerHTML = `<p style="color: #f44336; font-weight: bold;">Error loading images: ${error.message}</p>`;
     }
   });
   
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Check if API key is configured
     const apiKeyConfigured = await isApiKeyConfigured();
     if (!apiKeyConfigured) {
-      resultsDiv.innerHTML = '<p style="color: red;">Please configure your OpenAI API key first.</p>';
+      resultsDiv.innerHTML = '<p style="color: #f44336; font-weight: bold;">Please configure your OpenAI API key first.</p>';
       return;
     }
     
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const recentImages = await getRecentImages();
     
     if (!recentImages.control || !recentImages.test) {
-      resultsDiv.innerHTML = '<p style="color: red;">Please capture both control and test images first.</p>';
+      resultsDiv.innerHTML = '<p style="color: #f44336; font-weight: bold;">Please capture both control and test images first.</p>';
       return;
     }
     
@@ -208,14 +208,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (message.success) {
         resultsDiv.innerHTML = `
           <h3>Test Results</h3>
-          <p><strong>Status:</strong> ${message.data.passed ? 'PASSED ✅' : 'FAILED ❌'}</p>
+          <p><strong>Status:</strong> ${message.data.passed ? 
+            '<span style="color: #4caf50; font-weight: bold;">PASSED ✅</span>' : 
+            '<span style="color: #f44336; font-weight: bold;">FAILED ❌</span>'}</p>
           <p><strong>Analysis:</strong></p>
           <pre>${message.data.analysis}</pre>
         `;
       } else {
         resultsDiv.innerHTML = `
           <h3>Test Failed</h3>
-          <p style="color: red;">${message.error}</p>
+          <p style="color: #f44336; font-weight: bold;">${message.error}</p>
         `;
       }
     }
