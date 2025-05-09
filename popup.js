@@ -256,18 +256,44 @@ document.addEventListener('DOMContentLoaded', async () => {
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === 'testResult') {
       if (message.success) {
+        // Create a more prominent pass/fail banner
+        const statusBanner = message.data.passed ? 
+          `<div style="background-color: #4caf50; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 20px; font-weight: bold;">
+            <span style="font-size: 24px;">✅ PASSED</span>
+            <p style="margin: 5px 0 0 0; font-size: 14px;">All tests completed successfully</p>
+          </div>` : 
+          `<div style="background-color: #f44336; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 20px; font-weight: bold;">
+            <span style="font-size: 24px;">❌ FAILED</span>
+            <p style="margin: 5px 0 0 0; font-size: 14px;">Issues were detected that require attention</p>
+          </div>`;
+        
+        // Format the analysis to highlight issue categories
+        const formattedAnalysis = message.data.analysis
+          .replace(/CRITICAL:/g, '<span style="color: #f44336; font-weight: bold;">CRITICAL:</span>')
+          .replace(/MAJOR:/g, '<span style="color: #ff9800; font-weight: bold;">MAJOR:</span>')
+          .replace(/MINOR:/g, '<span style="color: #ffeb3b; font-weight: bold;">MINOR:</span>')
+          .replace(/COSMETIC:/g, '<span style="color: #8bc34a; font-weight: bold;">COSMETIC:</span>')
+          .replace(/VERDICT: PASS/gi, '<span style="color: #4caf50; font-weight: bold;">VERDICT: PASS</span>')
+          .replace(/VERDICT: FAIL/gi, '<span style="color: #f44336; font-weight: bold;">VERDICT: FAIL</span>');
+        
         resultsDiv.innerHTML = `
           <h3>Test Results</h3>
-          <p><strong>Status:</strong> ${message.data.passed ? 
-            '<span style="color: #4caf50; font-weight: bold;">PASSED ✅</span>' : 
-            '<span style="color: #f44336; font-weight: bold;">FAILED ❌</span>'}</p>
-          <p><strong>Analysis:</strong></p>
-          <pre>${message.data.analysis}</pre>
+          ${statusBanner}
+          <div style="background-color: white; padding: 15px; border-radius: 8px; margin-top: 10px;">
+            <h4>Detailed Analysis:</h4>
+            <div style="white-space: pre-wrap; font-family: 'Poppins', sans-serif;">${formattedAnalysis}</div>
+          </div>
         `;
       } else {
         resultsDiv.innerHTML = `
-          <h3>Test Failed</h3>
-          <p style="color: #f44336; font-weight: bold;">${message.error}</p>
+          <div style="background-color: #f44336; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 20px; font-weight: bold;">
+            <span style="font-size: 24px;">❌ ERROR</span>
+            <p style="margin: 5px 0 0 0; font-size: 14px;">The test could not be completed</p>
+          </div>
+          <div style="background-color: white; padding: 15px; border-radius: 8px;">
+            <h4>Error Details:</h4>
+            <p style="color: #f44336; font-weight: bold;">${message.error}</p>
+          </div>
         `;
       }
     }

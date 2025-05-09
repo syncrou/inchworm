@@ -38,14 +38,14 @@
         messages: [
           {
             role: "system",
-            content: "You are a QA testing assistant that compares screenshots of websites to identify visual differences and determine if they pass quality assurance standards."
+            content: "You are an expert QA testing engineer that compares screenshots of websites to identify visual differences. You have a keen eye for detail and understand what issues would impact users versus minor cosmetic differences that don't affect functionality."
           },
           {
             role: "user",
             content: [
               {
                 type: "text",
-                text: "I'm comparing a production website with a test version. The first image is from production, and the second is from the test environment. Please analyze both images and tell me:\n1. Are there any visual differences between them?\n2. If there are differences, are they significant enough to fail QA testing?\n3. Provide a detailed explanation of what differences you found.\n4. Conclude with a clear PASS or FAIL recommendation."
+                text: "I'm comparing a production website with a test version. The first image is from production (control), and the second is from the test environment.\n\nAs a QA engineer, please analyze both images and provide:\n\n1. A summary of all visual differences you can identify\n2. For each difference, categorize it as:\n   - CRITICAL: Breaks functionality or severely impacts user experience\n   - MAJOR: Significant visual issues that would confuse users\n   - MINOR: Small visual differences that don't impact usability\n   - COSMETIC: Tiny differences that most users wouldn't notice\n3. Explain the potential impact of each difference on the user experience\n4. Provide specific locations of issues (e.g., 'top navigation bar', 'footer', 'main content area')\n5. End with a clear PASS or FAIL verdict\n   - PASS: Only if there are no CRITICAL or MAJOR issues\n   - FAIL: If any CRITICAL or MAJOR issues exist\n\nFormat your conclusion clearly with 'VERDICT: PASS' or 'VERDICT: FAIL' on its own line at the end."
               },
               {
                 type: "image_url",
@@ -75,7 +75,7 @@
     const analysis = data.choices[0].message.content;
     
     // Determine if the test passed based on the analysis
-    const passed = analysis.toLowerCase().includes("pass");
+    const passed = analysis.toLowerCase().includes("verdict: pass");
     
     return {
       passed,
@@ -171,14 +171,14 @@
         messages: [
           {
             role: "system",
-            content: "You are a QA testing assistant that compares screenshots of websites to identify visual differences and determine if they pass quality assurance standards."
+            content: "You are an expert QA testing engineer that compares screenshots of websites to identify visual differences. You have a keen eye for detail and understand what issues would impact users versus minor cosmetic differences that don't affect functionality."
           },
           {
             role: "user",
             content: [
               {
                 type: "text",
-                text: "I'm comparing a production website with a test version. The first image is from production, and the second is from the test environment. Please analyze both images and tell me:\n1. Are there any visual differences between them?\n2. If there are differences, are they significant enough to fail QA testing?\n3. Provide a detailed explanation of what differences you found.\n4. Conclude with a clear PASS or FAIL recommendation."
+                text: "I'm comparing a production website with a test version. The first image is from production (control), and the second is from the test environment.\n\nAs a QA engineer, please analyze both images and provide:\n\n1. A summary of all visual differences you can identify\n2. For each difference, categorize it as:\n   - CRITICAL: Breaks functionality or severely impacts user experience\n   - MAJOR: Significant visual issues that would confuse users\n   - MINOR: Small visual differences that don't impact usability\n   - COSMETIC: Tiny differences that most users wouldn't notice\n3. Explain the potential impact of each difference on the user experience\n4. Provide specific locations of issues (e.g., 'top navigation bar', 'footer', 'main content area')\n5. End with a clear PASS or FAIL verdict\n   - PASS: Only if there are no CRITICAL or MAJOR issues\n   - FAIL: If any CRITICAL or MAJOR issues exist\n\nFormat your conclusion clearly with 'VERDICT: PASS' or 'VERDICT: FAIL' on its own line at the end."
               },
               {
                 type: "image_url",
@@ -208,7 +208,7 @@
     const analysis = data.choices[0].message.content;
     
     // Determine if the test passed based on the analysis
-    const passed = analysis.toLowerCase().includes("pass");
+    const passed = analysis.toLowerCase().includes("verdict: pass");
     
     return {
       passed,
