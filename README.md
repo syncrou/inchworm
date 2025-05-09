@@ -1,7 +1,7 @@
 # Inchworm: Visual QA Testing Made Simple
 
-![Inchworm Extension Screenshot](screenshot.png)
-*[Replace this with an actual screenshot of the extension in action]*
+<img width="563" alt="Screenshot 2025-05-09 at 15 18 53" src="https://github.com/user-attachments/assets/3a7bd5d9-3409-4407-93fc-b632f6da76b6" />
+
 
 ## What is Inchworm?
 
