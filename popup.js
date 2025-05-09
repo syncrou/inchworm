@@ -38,27 +38,39 @@ document.addEventListener('DOMContentLoaded', async () => {
       modelSelector.innerHTML = '';
       
       // Add options for each model
+      const addedModels = new Set(); // Track models we've already added
       models.forEach(model => {
+        // Skip duplicate models (different versions of the same model)
+        const baseModelName = getBaseModelName(model);
+        if (addedModels.has(baseModelName)) return;
+        
+        addedModels.add(baseModelName);
+        
         const option = document.createElement('option');
-        option.value = model;
-        
-        // Format the model name for display
-        let displayName = model;
-        if (model.includes('gpt-4-vision-preview')) {
-          displayName = 'GPT-4 Vision Preview';
-        } else if (model.includes('gpt-4o')) {
-          displayName = 'GPT-4o';
-        } else if (model.includes('gpt-4-turbo')) {
-          displayName = 'GPT-4 Turbo';
-        } else if (model.includes('gpt-4')) {
-          displayName = 'GPT-4';
-        } else if (model.includes('gpt-3.5-turbo')) {
-          displayName = 'GPT-3.5 Turbo';
-        }
-        
-        option.textContent = displayName;
+        option.value = model; // Keep the full model name as the value
+        option.textContent = getDisplayName(model);
         modelSelector.appendChild(option);
       });
+      
+      // Helper function to get base model name
+      function getBaseModelName(model) {
+        if (model.includes('gpt-4-vision')) return 'gpt-4-vision';
+        if (model.includes('gpt-4o')) return 'gpt-4o';
+        if (model.includes('gpt-4-turbo')) return 'gpt-4-turbo';
+        if (model.includes('gpt-4') && !model.includes('turbo') && !model.includes('vision')) return 'gpt-4';
+        if (model.includes('gpt-3.5-turbo')) return 'gpt-3.5-turbo';
+        return model;
+      }
+      
+      // Helper function to get friendly display name
+      function getDisplayName(model) {
+        if (model.includes('gpt-4-vision')) return 'GPT-4 Vision';
+        if (model.includes('gpt-4o')) return 'GPT-4o';
+        if (model.includes('gpt-4-turbo')) return 'GPT-4 Turbo';
+        if (model.includes('gpt-4') && !model.includes('turbo') && !model.includes('vision')) return 'GPT-4';
+        if (model.includes('gpt-3.5-turbo')) return 'GPT-3.5 Turbo';
+        return model; // Fallback to the original model name
+      }
       
       // Set the selected model
       if (savedModel && models.includes(savedModel)) {
@@ -139,27 +151,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         modelSelector.innerHTML = '';
         
         // Add options for each model
+        const addedModels = new Set(); // Track models we've already added
         models.forEach(model => {
+          // Skip duplicate models (different versions of the same model)
+          const baseModelName = getBaseModelName(model);
+          if (addedModels.has(baseModelName)) return;
+          
+          addedModels.add(baseModelName);
+          
           const option = document.createElement('option');
-          option.value = model;
-          
-          // Format the model name for display
-          let displayName = model;
-          if (model.includes('gpt-4-vision-preview')) {
-            displayName = 'GPT-4 Vision Preview';
-          } else if (model.includes('gpt-4o')) {
-            displayName = 'GPT-4o';
-          } else if (model.includes('gpt-4-turbo')) {
-            displayName = 'GPT-4 Turbo';
-          } else if (model.includes('gpt-4')) {
-            displayName = 'GPT-4';
-          } else if (model.includes('gpt-3.5-turbo')) {
-            displayName = 'GPT-3.5 Turbo';
-          }
-          
-          option.textContent = displayName;
+          option.value = model; // Keep the full model name as the value
+          option.textContent = getDisplayName(model);
           modelSelector.appendChild(option);
         });
+        
+        // Helper function to get base model name
+        function getBaseModelName(model) {
+          if (model.includes('gpt-4-vision')) return 'gpt-4-vision';
+          if (model.includes('gpt-4o')) return 'gpt-4o';
+          if (model.includes('gpt-4-turbo')) return 'gpt-4-turbo';
+          if (model.includes('gpt-4') && !model.includes('turbo') && !model.includes('vision')) return 'gpt-4';
+          if (model.includes('gpt-3.5-turbo')) return 'gpt-3.5-turbo';
+          return model;
+        }
+        
+        // Helper function to get friendly display name
+        function getDisplayName(model) {
+          if (model.includes('gpt-4-vision')) return 'GPT-4 Vision';
+          if (model.includes('gpt-4o')) return 'GPT-4o';
+          if (model.includes('gpt-4-turbo')) return 'GPT-4 Turbo';
+          if (model.includes('gpt-4') && !model.includes('turbo') && !model.includes('vision')) return 'GPT-4';
+          if (model.includes('gpt-3.5-turbo')) return 'GPT-3.5 Turbo';
+          return model; // Fallback to the original model name
+        }
         
         // Save the first model as default if none is saved
         const savedModel = await getSelectedModel();
