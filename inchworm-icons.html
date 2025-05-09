@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inchworm Icons</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #4caf50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .icon-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .icon-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .icon-section h2 {
+            color: #388e3c;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        
+        .icon-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            background-color: #ffffff;
+        }
+        
+        .icon-display.size-16 {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .icon-display.size-48 {
+            width: 48px;
+            height: 48px;
+        }
+        
+        .icon-display.size-128 {
+            width: 128px;
+            height: 128px;
+        }
+        
+        .instructions {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .instructions h3 {
+            color: #4caf50;
+            margin-top: 0;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .grid-background {
+            background-image: linear-gradient(rgba(200, 200, 200, 0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(200, 200, 200, 0.1) 1px, transparent 1px);
+            background-size: 10px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Inchworm Icons for Chrome Extension</h1>
+    
+    <div class="icon-container">
+        <div class="icon-section">
+            <h2>16x16 Icon</h2>
+            <p>This is the small icon used in browser tabs and other compact spaces.</p>
+            <div class="icon-display size-16 grid-background">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                    <!-- Inchworm body -->
+                    <path d="M3,8 C3,6.5 4,6 5,6 C6,6 7,6.5 7,8 C7,9.5 8,10 9,10 C10,10 11,9.5 11,8" 
+                          stroke="#4caf50" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <!-- Inchworm head -->
+                    <circle cx="11" cy="8" r="2" fill="#8bc34a"/>
+                    <!-- Inchworm eyes -->
+                    <circle cx="11.5" cy="7.5" r="0.5" fill="#333"/>
+                    <circle cx="12" cy="8.5" r="0.5" fill="#333"/>
+                    <!-- Inchworm antennae -->
+                    <line x1="12" y1="6.5" x2="13" y2="5.5" stroke="#333" stroke-width="0.5"/>
+                    <line x1="12.5" y1="7" x2="14" y2="6.5" stroke="#333" stroke-width="0.5"/>
+                </svg>
+            </div>
+            <p><strong>Screenshot this area precisely to create your 16x16 icon.</strong></p>
+        </div>
+        
+        <div class="icon-section">
+            <h2>48x48 Icon</h2>
+            <p>This is the medium icon used in the Chrome Web Store and extension management page.</p>
+            <div class="icon-display size-48 grid-background">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+                    <!-- Inchworm body segments -->
+                    <path d="M8,24 C8,20 12,18 16,18 C20,18 24,20 24,24 C24,28 28,30 32,30 C36,30 40,28 40,24" 
+                          stroke="#4caf50" stroke-width="6" fill="none" stroke-linecap="round"/>
+                    <!-- Inchworm head -->
+                    <circle cx="40" cy="24" r="6" fill="#8bc34a"/>
+                    <!-- Inchworm eyes -->
+                    <circle cx="42" cy="22" r="1.5" fill="#333"/>
+                    <circle cx="38" cy="22" r="1.5" fill="#333"/>
+                    <!-- Inchworm antennae -->
+                    <line x1="38" y1="19" x2="36" y2="16" stroke="#333" stroke-width="1.5"/>
+                    <line x1="42" y1="19" x2="44" y2="16" stroke="#333" stroke-width="1.5"/>
+                    <!-- Inchworm feet -->
+                    <line x1="16" y1="18" x2="16" y2="22" stroke="#8bc34a" stroke-width="1.5"/>
+                    <line x1="24" y1="24" x2="24" y2="28" stroke="#8bc34a" stroke-width="1.5"/>
+                    <line x1="32" y1="30" x2="32" y2="34" stroke="#8bc34a" stroke-width="1.5"/>
+                </svg>
+            </div>
+            <p><strong>Screenshot this area precisely to create your 48x48 icon.</strong></p>
+        </div>
+        
+        <div class="icon-section">
+            <h2>128x128 Icon</h2>
+            <p>This is the large icon used in the Chrome Web Store and installation dialog.</p>
+            <div class="icon-display size-128 grid-background">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+                    <!-- Inchworm body segments -->
+                    <path d="M20,64 C20,54 30,48 40,48 C50,48 60,54 60,64 C60,74 70,80 80,80 C90,80 100,74 100,64" 
+                          stroke="#4caf50" stroke-width="16" fill="none" stroke-linecap="round"/>
+                    
+                    <!-- Inchworm head -->
+                    <circle cx="100" cy="64" r="16" fill="#8bc34a"/>
+                    
+                    <!-- Inchworm eyes -->
+                    <circle cx="96" cy="58" r="4" fill="#333"/>
+                    <circle cx="104" cy="58" r="4" fill="#333"/>
+                    
+                    <!-- Inchworm mouth -->
+                    <path d="M96,70 Q100,74 104,70" stroke="#333" stroke-width="2" fill="none"/>
+                    
+                    <!-- Inchworm antennae -->
+                    <line x1="94" y1="50" x2="88" y2="40" stroke="#333" stroke-width="3"/>
+                    <line x1="106" y1="50" x2="112" y2="40" stroke="#333" stroke-width="3"/>
+                    
+                    <!-- Inchworm feet -->
+                    <line x1="40" y1="48" x2="40" y2="58" stroke="#8bc34a" stroke-width="4"/>
+                    <line x1="60" y1="64" x2="60" y2="74" stroke="#8bc34a" stroke-width="4"/>
+                    <line x1="80" y1="80" x2="80" y2="90" stroke="#8bc34a" stroke-width="4"/>
+                    
+                    <!-- Highlight spots -->
+                    <circle cx="30" cy="64" r="4" fill="#8bc34a"/>
+                    <circle cx="50" cy="64" r="4" fill="#8bc34a"/>
+                    <circle cx="70" cy="64" r="4" fill="#8bc34a"/>
+                    <circle cx="90" cy="64" r="4" fill="#8bc34a"/>
+                </svg>
+            </div>
+            <p><strong>Screenshot this area precisely to create your 128x128 icon.</strong></p>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h3>How to Use These Icons</h3>
+        <ol>
+            <li>Take a screenshot of each icon display area (the dashed boxes).</li>
+            <li>Crop each screenshot precisely to the size indicated (16x16, 48x48, 128x128).</li>
+            <li>Save each cropped image as a PNG file with the corresponding name (icon16.png, icon48.png, icon128.png).</li>
+            <li>Replace the existing icon files in your extension directory with these new files.</li>
+            <li>Reload your extension in Chrome to see the new icons.</li>
+        </ol>
+        <p><strong>Tip:</strong> Use a screenshot tool that allows precise selection, like Snipping Tool on Windows or Screenshot on Mac.</p>
+    </div>
+</body>
+</html>
